@@ -1,0 +1,33 @@
+Excercise 1
+Client uses Rest Template configuration that exists in the client package
+
+Excercise 2
+Done
+
+Excercise 3
+Implemented basic pagination as this wont scale for high volumes. By default client gets page 1 with 10 records, but they can come back and ask for any page. 
+This can be further improved by providing some additional details such as total size back to the client. 
+Todo - add custom validation on block type to validate against the enumeration
+
+Excercise 4
+Implemented Patch, but reading the attributes on the path. However full blown Patch implementation as per the spec requires to accept json updates at attribute level. The future solution can implement this. 
+Implemented a regex validation for block name and tested this using end to end flows. However, it appears that these bean validations are not applied to spring mock mvc tests. 
+Hence I have marked the corresponding test @todo @Ingore. It appears that some research need to be done on how to get the unit test to work. 
+
+Excercise 5
+Implemented a rest call to the hadoop service from the service layer. This template has a timeout set to 5 seconds which can be modified in the ServerRestTemplateCongiruation. 
+The service method is invoked in a separate thread using Callable interface as this involves a slow running call. The service method is also marked as Transactional and 
+would roll back in the case of connection timeout with hadoop, and thus return error back to client. The client is then expected to try the operation again. 
+I have tried to keep it simple here, obviously I could implement a more sophisticated solution of completely decoupling the hadoop interaction, but is 
+beyond the scope of this excercise. This is typically what would be done in a real life application. 
+
+Some additional points:
+
+1. All exception handlers are in the class RestResponseEntityExceptionHandler. While this is convenient, in a large application, it might not be possible to have generic 
+exception handling and might require some customisation based on the exception type. 
+
+2. End to end integration tests would be required on top of the unit tests to prove the components hang together with the configuration. This should cover both 
+happy flows and some negative cases (such as transaction timeout, validation issues, run time exceptions, etc). This will require some additional effort. 
+
+
+
